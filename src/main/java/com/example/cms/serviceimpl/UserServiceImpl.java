@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.cms.entity.User;
 import com.example.cms.exception.UserAlreadyExistByEmailException;
+import com.example.cms.exception.UserNotFoundByIdException;
 import com.example.cms.repository.UserRepository;
 import com.example.cms.requestdto.UserRequestEntity;
 import com.example.cms.responsedto.UserResponseEntity;
@@ -55,6 +56,15 @@ public class UserServiceImpl implements UserService
 		return ResponseEntity.ok(structure.setStatusCode(HttpStatus.OK.value())
 				.setMessgae("Registered Successfully")
 				.setData(mapToUserResponse(save)));		
+	}
+	@Override
+	public ResponseEntity<ResponseStructure<UserResponseEntity>> findUniqueUser(int userId) {
+		
+		return repository.findById(userId).map(user->{
+			return ResponseEntity.ok(structure.setStatusCode(HttpStatus.OK.value())
+												.setMessgae("User Found")
+												.setData(mapToUserResponse(user)));
+		}).orElseThrow(()->new UserNotFoundByIdException("user not Found"));
 	}
 
 	

@@ -12,6 +12,8 @@ public interface UserService {
 
 	public abstract ResponseEntity<ResponseStructure<UserResponseEntity>> registerUser(UserRequestEntity userRequest);
 
+	public abstract ResponseEntity<ResponseStructure<UserResponseEntity>> findUniqueUser(int userId);
+
 
 	
 
