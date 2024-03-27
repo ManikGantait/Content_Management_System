@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.cms.requestdto.LoginRequest;
 import com.example.cms.requestdto.UserRequestEntity;
 import com.example.cms.responsedto.UserResponseEntity;
 import com.example.cms.service.UserService;

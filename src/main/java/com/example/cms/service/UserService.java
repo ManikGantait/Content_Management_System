@@ -2,7 +2,6 @@ package com.example.cms.service;
 
 import org.springframework.http.ResponseEntity;
 
-import com.example.cms.requestdto.LoginRequest;
 import com.example.cms.requestdto.UserRequestEntity;
 import com.example.cms.responsedto.UserResponseEntity;
 import com.example.cms.utility.ResponseStructure;
