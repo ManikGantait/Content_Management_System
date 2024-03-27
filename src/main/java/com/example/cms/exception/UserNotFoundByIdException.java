@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class UserNotFoundByIdException extends RuntimeException {
+public class UserNotFoundByIdException extends RuntimeException{
 	private String message;
 
 }
