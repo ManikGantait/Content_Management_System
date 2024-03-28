@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.example.cms.entity.Blog;
 import com.example.cms.entity.User;
 import com.example.cms.exception.BlogAlreadyExistByTitle;
+import com.example.cms.exception.BlogNotFoundByIdException;
 import com.example.cms.exception.TopicNotSpecifiedException;
 import com.example.cms.exception.UserNotFoundByIdException;
 import com.example.cms.repository.BlogRepository;
@@ -76,6 +77,17 @@ public class BlogServiceImpl implements BlogService {
 			return ResponseEntity.badRequest().body(responseStructure2.setStatusCode(HttpStatus.OK.value())
 													.setMessgae("Title Not Found")
 													.setData(false));
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<BlogResponseEntity>> findByBlogId(int blogId) {
+		
+		return blogRepository.findById(blogId).map(blog->{
+			return ResponseEntity.ok(responseStructure.setStatusCode(HttpStatus.OK.value())
+													.setMessgae("Blog Found")
+													.setData(mapToBlogResponseEntity(blog)));
+		}).orElseThrow(()->new BlogNotFoundByIdException("Blog is not present with specified Id"));
+		
 	}
 
 }

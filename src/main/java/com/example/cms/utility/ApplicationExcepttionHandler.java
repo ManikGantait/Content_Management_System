@@ -18,6 +18,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.example.cms.exception.BlogAlreadyExistByTitle;
+import com.example.cms.exception.BlogNotFoundByIdException;
 import com.example.cms.exception.TopicNotSpecifiedException;
 import com.example.cms.exception.UserAlreadyExistByEmailException;
 import com.example.cms.exception.UserNotFoundByIdException;
@@ -87,6 +88,12 @@ public class ApplicationExcepttionHandler extends ResponseEntityExceptionHandler
 	
 	@ExceptionHandler
 	public ResponseEntity<ErrorStructure<String>> handleBlogTopicNotSpecified(TopicNotSpecifiedException ex)
+	{
+		return errorStructure(HttpStatus.BAD_REQUEST, ex.getMessage(), "Title is not currect");
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ErrorStructure<String>> handleBlogNotFoundById(BlogNotFoundByIdException ex)
 	{
 		return errorStructure(HttpStatus.BAD_REQUEST, ex.getMessage(), "Title is not currect");
 	}
