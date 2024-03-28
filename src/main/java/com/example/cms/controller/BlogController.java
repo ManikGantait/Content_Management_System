@@ -14,6 +14,9 @@ import com.example.cms.utility.ResponseStructure;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @AllArgsConstructor
@@ -25,6 +28,11 @@ public class BlogController {
 	public ResponseEntity<ResponseStructure<BlogResponseEntity>> createBlog(@PathVariable int userId,@RequestBody @Valid BlogRequestEntity blogRequestEntity)
 	{
 		return blogService.createBlog(userId,blogRequestEntity);
+	}
+	
+	@GetMapping("/titles/{title}/blogs")
+	public ResponseEntity<ResponseStructure<Boolean>> checkBlogTitleAvailability(@PathVariable String title) {
+		return blogService.checkBlogTitleAvailability(title);
 	}
 	
 

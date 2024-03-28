@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.example.cms.entity.Blog;
 import com.example.cms.entity.User;
 import com.example.cms.exception.BlogAlreadyExistByTitle;
+import com.example.cms.exception.TopicNotSpecifiedException;
 import com.example.cms.exception.UserNotFoundByIdException;
 import com.example.cms.repository.BlogRepository;
 import com.example.cms.repository.UserRepository;
@@ -22,6 +23,7 @@ public class BlogServiceImpl implements BlogService {
 	private UserRepository userRepository;
 	private BlogRepository blogRepository;
 	private ResponseStructure<BlogResponseEntity> responseStructure;
+	private ResponseStructure<Boolean> responseStructure2;
 	
 	private Blog mapToBlog(Blog blog,BlogRequestEntity blogRequestEntity)
 	{
@@ -49,6 +51,9 @@ public class BlogServiceImpl implements BlogService {
 		
 		Blog saveBlog = userRepository.findById(userId).map(user->{
 			
+			if(blogRequestEntity.getTopics().length<1)
+				throw new TopicNotSpecifiedException("faild to create Blog");
+			
 			 Blog blog = mapToBlog(new Blog(), blogRequestEntity);
 			 blog.getUsers().add(user);
 			 return blogRepository.save(blog);
@@ -59,6 +64,18 @@ public class BlogServiceImpl implements BlogService {
 										.setMessgae("Blog created successfully")
 										.setData(mapToBlogResponseEntity(saveBlog)));
 		
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<Boolean>> checkBlogTitleAvailability(String title) {
+		if(blogRepository.existsByTitle(title))
+		return ResponseEntity.ok(responseStructure2.setStatusCode(HttpStatus.OK.value())
+													.setMessgae("Title Found")
+													.setData(true));
+		else
+			return ResponseEntity.badRequest().body(responseStructure2.setStatusCode(HttpStatus.OK.value())
+													.setMessgae("Title Not Found")
+													.setData(false));
 	}
 
 }

@@ -11,4 +11,6 @@ public interface BlogService {
 
 	ResponseEntity<ResponseStructure<BlogResponseEntity>> createBlog(int userId, BlogRequestEntity blogRequestEntity);
 
+	ResponseEntity<ResponseStructure<Boolean>> checkBlogTitleAvailability(String title);
+
 }
