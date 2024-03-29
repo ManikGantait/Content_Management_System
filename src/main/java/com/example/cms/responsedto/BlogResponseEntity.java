@@ -2,6 +2,8 @@ package com.example.cms.responsedto;
 
 
 
+import com.example.cms.entity.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,5 +20,6 @@ public class BlogResponseEntity {
 	private String title;
 	private String[] topics;
 	private String about;
+	private int adminId;
 
 }

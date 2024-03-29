@@ -35,8 +35,12 @@ public class BlogServiceImpl implements BlogService {
 	}
 
 	private BlogResponseEntity mapToBlogResponseEntity(Blog blog) {
-		return BlogResponseEntity.builder().blogId(blog.getBlogId()).title(blog.getTitle()).about(blog.getAbout())
-				.topics(blog.getTopics()).build();
+		return BlogResponseEntity.builder().blogId(blog.getBlogId())
+				.title(blog.getTitle())
+				.about(blog.getAbout())
+				.topics(blog.getTopics())
+				.adminId(blog.getUser().getUserId())
+				.build();
 
 	}
 
@@ -44,17 +48,19 @@ public class BlogServiceImpl implements BlogService {
 	public ResponseEntity<ResponseStructure<BlogResponseEntity>> createBlog(int userId,
 			BlogRequestEntity blogRequestEntity) {
 
-		if (blogRepository.existsByTitle(blogRequestEntity.getTitle()))
-			throw new BlogAlreadyExistByTitle("Blog already exist with same title");
-
 		Blog saveBlog = userRepository.findById(userId).map(user -> {
-
+			
+			if (blogRepository.existsByTitle(blogRequestEntity.getTitle()))
+				throw new BlogAlreadyExistByTitle("Blog already exist with same title");
+			
 			if (blogRequestEntity.getTopics().length < 1)
 				throw new TopicNotSpecifiedException("faild to create Blog");
 
 			Blog blog = mapToBlog(new Blog(), blogRequestEntity);
-			blog.getUsers().add(user);
+			
+			blog.setUser(user);
 			return blogRepository.save(blog);
+						
 
 		}).orElseThrow(() -> new UserNotFoundByIdException("User With Specified Id not Found"));
 
