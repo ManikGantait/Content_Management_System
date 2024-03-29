@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +26,9 @@ public class Blog {
 	
 	@ManyToOne
 	private User user;
+	
+	@OneToOne
+	private ContributionPanel contributionPanel=new ContributionPanel();
 	
 	
 

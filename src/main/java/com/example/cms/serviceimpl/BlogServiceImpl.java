@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.cms.entity.Blog;
+import com.example.cms.entity.ContributionPanel;
 import com.example.cms.entity.User;
 import com.example.cms.exception.BlogAlreadyExistByTitle;
 import com.example.cms.exception.BlogNotFoundByIdException;
@@ -31,6 +32,7 @@ public class BlogServiceImpl implements BlogService {
 		blog.setTitle(blogRequestEntity.getTitle());
 		blog.setTopics(blogRequestEntity.getTopics());
 		blog.setAbout(blogRequestEntity.getAbout());
+		blog.getContributionPanel().setBlog(blog);
 		return blog;
 	}
 
