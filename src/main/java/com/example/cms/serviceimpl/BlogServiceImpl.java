@@ -12,6 +12,7 @@ import com.example.cms.exception.BlogNotFoundByIdException;
 import com.example.cms.exception.TopicNotSpecifiedException;
 import com.example.cms.exception.UserNotFoundByIdException;
 import com.example.cms.repository.BlogRepository;
+import com.example.cms.repository.ContributorPanelRepository;
 import com.example.cms.repository.UserRepository;
 import com.example.cms.requestdto.BlogRequestEntity;
 import com.example.cms.responsedto.BlogResponseEntity;
@@ -25,6 +26,7 @@ import lombok.AllArgsConstructor;
 public class BlogServiceImpl implements BlogService {
 	private UserRepository userRepository;
 	private BlogRepository blogRepository;
+	private ContributorPanelRepository contributorsRepository;
 	private ResponseStructure<BlogResponseEntity> responseStructure;
 	private ResponseStructure<Boolean> responseStructure2;
 
@@ -32,7 +34,6 @@ public class BlogServiceImpl implements BlogService {
 		blog.setTitle(blogRequestEntity.getTitle());
 		blog.setTopics(blogRequestEntity.getTopics());
 		blog.setAbout(blogRequestEntity.getAbout());
-		blog.getContributionPanel().setBlog(blog);
 		return blog;
 	}
 
@@ -60,8 +61,9 @@ public class BlogServiceImpl implements BlogService {
 
 			Blog blog = mapToBlog(new Blog(), blogRequestEntity);
 			
-			blog.setUser(user);
-			return blogRepository.save(blog);
+				blog.setUser(user);
+				blog.setContributionPanel(contributorsRepository.save(new ContributionPanel()));
+			 return blogRepository.save(blog);
 						
 
 		}).orElseThrow(() -> new UserNotFoundByIdException("User With Specified Id not Found"));

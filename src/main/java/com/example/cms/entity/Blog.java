@@ -28,7 +28,7 @@ public class Blog {
 	private User user;
 	
 	@OneToOne
-	private ContributionPanel contributionPanel=new ContributionPanel();
+	private ContributionPanel contributionPanel;
 	
 	
 
