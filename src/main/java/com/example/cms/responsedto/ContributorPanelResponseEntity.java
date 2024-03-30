@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class ContributerPanelResponseEntity {
+public class ContributorPanelResponseEntity {
 	
 	private int panelId;
 //	private int[] contributers;

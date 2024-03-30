@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.cms.responsedto.ContributerPanelResponseEntity;
+import com.example.cms.responsedto.ContributorPanelResponseEntity;
 import com.example.cms.service.ContributorPanelService;
 import com.example.cms.utility.ResponseStructure;
 
@@ -21,13 +21,13 @@ public class ContributorPanelController {
 	
 
 	@PutMapping("/users/{userId}/contribution-panels/{panelId}")
-	public ResponseEntity<ResponseStructure<ContributerPanelResponseEntity>> addContributor(@PathVariable int userId, @PathVariable int panelId)
+	public ResponseEntity<ResponseStructure<ContributorPanelResponseEntity>> addContributor(@PathVariable int userId, @PathVariable int panelId)
 	{
 		return contributerPanelService.addContributor(userId,panelId);
 	}
 	
 	@DeleteMapping("/users/{userId}/contribution-panels/{panelId}")
-	public ResponseEntity<ResponseStructure<ContributerPanelResponseEntity>> deleteContributer(@PathVariable int userId,@PathVariable int panelId)
+	public ResponseEntity<ResponseStructure<ContributorPanelResponseEntity>> deleteContributer(@PathVariable int userId,@PathVariable int panelId)
 	{
 		return contributerPanelService.deleteContributor(userId,panelId);
 	}
