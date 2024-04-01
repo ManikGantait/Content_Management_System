@@ -1,4 +1,4 @@
-package com.example.cms.serviceimpl;
+package com.example.cms.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
