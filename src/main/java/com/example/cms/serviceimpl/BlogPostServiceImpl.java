@@ -12,6 +12,7 @@ import com.example.cms.entity.BlogPost;
 import com.example.cms.entity.ContributionPanel;
 import com.example.cms.enums.PostType;
 import com.example.cms.exception.BlogNotFoundByIdException;
+import com.example.cms.exception.BlogPostNotFoundByIdException;
 import com.example.cms.exception.IllegalAccessRequestException;
 import com.example.cms.exception.UserNotFoundByIdException;
 import com.example.cms.repository.BlogPostRepository;
@@ -105,6 +106,23 @@ public class BlogPostServiceImpl implements BlogPostService {
 			}).orElseThrow(()-> new BlogNotFoundByIdException("Blog not Found"));
 			
 		}).orElseThrow(()->new UserNotFoundByIdException("user Not found By Id"));
+		
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<BlogPostResponseEntity>> deleteDraft(int postId) {
+		
+		
+	return blogPostRepository.findById(postId).map(blogPost ->{
+		String email=SecurityContextHolder.getContext().getAuthentication().getName();
+		if(!blogPost.getCreatedBy().equals(email) && ! blogPost.getBlog().getUser().getEmail().equals(email))
+			throw new IllegalAccessRequestException("Access Denied");
+		blogPostRepository.delete(blogPost);		
+		return ResponseEntity.ok(responseStructure.setStatusCode(HttpStatus.OK.value())
+											.setMessgae("Deleted")
+											.setData(mapToBlogPostResponseEntity(blogPost)));
+		
+	}).orElseThrow(()->new BlogPostNotFoundByIdException("Blog Post Not Found with specified id"));
 		
 	}
 
