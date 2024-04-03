@@ -30,5 +30,6 @@ public class BlogPostResponseEntity {
 	private LocalDateTime lastModifiedAt;
 	private String lastModifiedBy;
 	
-
+	private PublishResponseEntity publishResponseEntity;
+	
 }

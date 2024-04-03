@@ -1,7 +1,6 @@
 package com.example.cms.serviceimpl;
 
 
-import org.springframework.data.domain.AuditorAware;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,9 +9,11 @@ import org.springframework.stereotype.Service;
 import com.example.cms.entity.Blog;
 import com.example.cms.entity.BlogPost;
 import com.example.cms.entity.ContributionPanel;
+import com.example.cms.entity.Publish;
 import com.example.cms.enums.PostType;
 import com.example.cms.exception.BlogNotFoundByIdException;
 import com.example.cms.exception.BlogPostNotFoundByIdException;
+import com.example.cms.exception.BlogPostNotPublishException;
 import com.example.cms.exception.IllegalAccessRequestException;
 import com.example.cms.exception.UserNotFoundByIdException;
 import com.example.cms.repository.BlogPostRepository;
@@ -21,6 +22,7 @@ import com.example.cms.repository.ContributorPanelRepository;
 import com.example.cms.repository.UserRepository;
 import com.example.cms.requestdto.BlogPostRequestEntity;
 import com.example.cms.responsedto.BlogPostResponseEntity;
+import com.example.cms.responsedto.PublishResponseEntity;
 import com.example.cms.service.BlogPostService;
 import com.example.cms.utility.AuditingConfig;
 import com.example.cms.utility.ResponseStructure;
@@ -49,6 +51,11 @@ public class BlogPostServiceImpl implements BlogPostService {
 	
 	private BlogPostResponseEntity mapToBlogPostResponseEntity(BlogPost blogPost) {
 		
+		PublishResponseEntity mapToPublishResponseEntity=null;
+		if(blogPost.getPublish()!=null) {
+			mapToPublishResponseEntity = mapToPublishResponseEntity(blogPost.getPublish());
+		}
+		
 		return BlogPostResponseEntity.builder().postId(blogPost.getPostId())
 										.title(blogPost.getTitle())
 										.subTitle(blogPost.getSubTitle())
@@ -59,8 +66,15 @@ public class BlogPostServiceImpl implements BlogPostService {
 										.createAt(blogPost.getCreateAt())
 										.lastModifiedAt(blogPost.getLastModifiedAt())
 										.lastModifiedBy(blogPost.getLastModifiedBy())
-										.build();		
-
+										.publishResponseEntity(mapToPublishResponseEntity)
+										.build();
+	}
+	private PublishResponseEntity mapToPublishResponseEntity(Publish publish)
+	{
+		return PublishResponseEntity.builder().publishId(publish.getPublishId()).scoTitle(publish.getScoTitle())
+					.scoDescription(publish.getScoDescription())
+					.scoTags(publish.getScoTags())
+					.build();
 	}
 
 
@@ -125,6 +139,29 @@ public class BlogPostServiceImpl implements BlogPostService {
 	}).orElseThrow(()->new BlogPostNotFoundByIdException("Blog Post Not Found with specified id"));
 		
 	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<BlogPostResponseEntity>> findBlogPostById(int postId) {
+		return blogPostRepository.findById(postId).map(blogPost ->{
+			return ResponseEntity.ok(responseStructure.setStatusCode(HttpStatus.OK.value())
+					.setData(mapToBlogPostResponseEntity(blogPost))
+					.setMessgae("Blog Found"));
+			
+		}).orElseThrow(()->new BlogPostNotFoundByIdException("Blog Post Not Found"));
+		
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<BlogPostResponseEntity>> findBlogPostByPostType(int postId) {
+		
+		return blogPostRepository.findByPostIdAndPostType(postId,PostType.PUBLISHED).map(blogPost->
+			ResponseEntity.ok(responseStructure.setStatusCode(HttpStatus.OK.value())
+									.setMessgae("Blog Found")
+									.setData(mapToBlogPostResponseEntity(blogPost)))
+		).orElseThrow(()->new BlogPostNotFoundByIdException("Blog Not Found By Id"));
+		
+	}
+	
 
 	
 	

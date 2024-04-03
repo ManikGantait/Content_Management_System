@@ -7,14 +7,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
+public class PublishResponseEntity {
 
-public class ContributorPanelResponseEntity {
-	
-	private int panelId;
-	private String username;
-
+	private int publishId;
+	private String scoTitle;
+	private String scoDescription;
+	private String scoTags;
 }

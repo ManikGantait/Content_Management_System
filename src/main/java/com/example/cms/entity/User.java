@@ -44,7 +44,8 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private List<Blog> blogs=new ArrayList<>();
 	
-	
+	@ManyToMany
+	private List<ContributionPanel> contributionPanels=new ArrayList<>();
 	
 	
 	

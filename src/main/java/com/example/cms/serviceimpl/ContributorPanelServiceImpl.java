@@ -29,11 +29,12 @@ public class ContributorPanelServiceImpl implements ContributorPanelService {
 	private ResponseStructure<ContributorPanelResponseEntity> responseStructure;
 	
 
-	private ContributorPanelResponseEntity mapToContributorPanelResponseEntity(ContributionPanel contributionPanel) {
+	private ContributorPanelResponseEntity mapToContributorPanelResponseEntity(ContributionPanel contributionPanel,String username ) {
 		
 		return ContributorPanelResponseEntity.builder()
-												.panelId(contributionPanel.getPanelId()
-									).build();
+												.panelId(contributionPanel.getPanelId())
+												.username(username)
+												.build();
 		
 
 		
@@ -57,12 +58,12 @@ public class ContributorPanelServiceImpl implements ContributorPanelService {
 						panel.getContributors().add(contributor);
 						return ResponseEntity.ok(responseStructure.setStatusCode(HttpStatus.OK.value())
 													.setMessgae("Contributor added")
-													.setData(mapToContributorPanelResponseEntity(contributorPanelRepository.save(panel))));
+								.setData(mapToContributorPanelResponseEntity(panel, contributor.getUsername())));
 					}
 					return ResponseEntity.ok(responseStructure
 							.setStatusCode(HttpStatus.OK.value())
 							.setMessgae("Contributor already exist")
-							.setData(mapToContributorPanelResponseEntity(panel)));	
+							.setData(mapToContributorPanelResponseEntity(panel, contributor.getUsername())));	
 						
 						
 
@@ -86,7 +87,7 @@ public class ContributorPanelServiceImpl implements ContributorPanelService {
 			int panelId) {
 	String email=SecurityContextHolder.getContext().getAuthentication().getName();
 		
-		ContributionPanel contributionPanel = userRrepository.findByEmail(email).map(owner -> {
+		return userRrepository.findByEmail(email).map(owner -> {
 			
 			return contributorPanelRepository.findById(panelId).map(panel -> {
 				
@@ -94,7 +95,9 @@ public class ContributorPanelServiceImpl implements ContributorPanelService {
 					throw new IllegalAccessRequestException("Access Denied");
 				return userRrepository.findById(userId).map(user -> {
 					panel.getContributors().remove(user);
-					return contributorPanelRepository.save(panel);
+					return ResponseEntity.ok(responseStructure.setStatusCode(HttpStatus.OK.value())
+							.setMessgae("Contributor deleted")
+							.setData(mapToContributorPanelResponseEntity(contributorPanelRepository.save(panel), user.getUsername())));
 
 				}).orElseThrow(() -> new UserNotFoundByIdException("User Not Found With Specified Id"));
 
@@ -103,9 +106,7 @@ public class ContributorPanelServiceImpl implements ContributorPanelService {
 		}).get();
 		
 		
-		return ResponseEntity.ok(responseStructure.setStatusCode(HttpStatus.OK.value())
-													.setMessgae("Contributor deleted")
-													.setData(mapToContributorPanelResponseEntity(contributionPanel)));
+		
 		
 	}
 	
