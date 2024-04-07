@@ -41,6 +41,7 @@ public class BlogPostServiceImpl implements BlogPostService {
 	private ContributorPanelRepository contributorPanelRepository;
 	
 	private BlogPost mapToBlogPost(BlogPost blogPost, BlogPostRequestEntity blogPostRequestEntity) {
+		
 		blogPost.setTitle(blogPostRequestEntity.getTitle());
 		blogPost.setSubTitle(blogPostRequestEntity.getSubTitle());
 		blogPost.setSummary(blogPostRequestEntity.getSummary());
@@ -71,6 +72,7 @@ public class BlogPostServiceImpl implements BlogPostService {
 	}
 	private PublishResponseEntity mapToPublishResponseEntity(Publish publish)
 	{
+				
 		return PublishResponseEntity.builder().publishId(publish.getPublishId()).scoTitle(publish.getScoTitle())
 					.scoDescription(publish.getScoDescription())
 					.scoTags(publish.getScoTags())
@@ -83,8 +85,13 @@ public class BlogPostServiceImpl implements BlogPostService {
 		
 		return blogRepository.findById(blogId).map(blog->{
 			
+			
+			
 			BlogPost blogPost = mapToBlogPost(new BlogPost(),blogPostRequestEntity);
 			blogPost.setBlog(blog);
+			String email=SecurityContextHolder.getContext().getAuthentication().getName();
+			blogPost.setCreatedBy(email);
+			blogPost.setLastModifiedBy(email);
 			
 			
 			return ResponseEntity.ok(responseStructure.setStatusCode(HttpStatus.OK.value())
@@ -111,7 +118,11 @@ public class BlogPostServiceImpl implements BlogPostService {
 					throw new IllegalAccessRequestException("Access Denied");
 				
 				BlogPost blogPost = mapToBlogPost(post, blogPostRequestEntity);
+				
+				String modifiedByemail=SecurityContextHolder.getContext().getAuthentication().getName();
+				blogPost.setLastModifiedBy(modifiedByemail);
 
+				
 				return ResponseEntity
 						.ok(responseStructure.setStatusCode(HttpStatus.OK.value()).setMessgae("BlogPost Updated")
 								.setData(mapToBlogPostResponseEntity(blogPostRepository.save(blogPost))));

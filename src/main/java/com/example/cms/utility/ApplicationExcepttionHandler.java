@@ -20,7 +20,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.example.cms.exception.BlogAlreadyExistByTitle;
 import com.example.cms.exception.BlogNotFoundByIdException;
 import com.example.cms.exception.BlogPostNotFoundByIdException;
+import com.example.cms.exception.BlogPostNotPublishException;
+import com.example.cms.exception.ContributorPanelNotFoundByIdException;
 import com.example.cms.exception.IllegalAccessRequestException;
+import com.example.cms.exception.ScheduleTimeNotValidException;
 import com.example.cms.exception.TopicNotSpecifiedException;
 import com.example.cms.exception.UserAlreadyExistByEmailException;
 import com.example.cms.exception.UserNotFoundByIdException;
@@ -111,6 +114,23 @@ public class ApplicationExcepttionHandler extends ResponseEntityExceptionHandler
 	{
 		return errorStructure(HttpStatus.BAD_REQUEST, ex.getMessage(), "Blog Post Not Found by Id");
 	}
+	@ExceptionHandler
+	public ResponseEntity<ErrorStructure<String>> handleBlogPostNotPublish(BlogPostNotPublishException ex)
+	{
+		return errorStructure(HttpStatus.BAD_REQUEST, ex.getMessage(), "Blog Post Not Publish");
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ErrorStructure<String>> handleContributiorPanelNotFound(ContributorPanelNotFoundByIdException ex)
+	{
+		return errorStructure(HttpStatus.BAD_REQUEST, ex.getMessage(), "contributor not Found By id");
+	}
+	@ExceptionHandler
+	public ResponseEntity<ErrorStructure<String>> handleScheduleTimeNotValid(ScheduleTimeNotValidException ex)
+	{
+		return errorStructure(HttpStatus.BAD_REQUEST, ex.getMessage(), "ScheduleTimeNotValid");
+	}
+	
 
 	
 		

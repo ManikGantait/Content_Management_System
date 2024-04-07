@@ -49,16 +49,21 @@ public class ContributorPanelServiceImpl implements ContributorPanelService {
 		return  userRrepository.findByEmail(email).map(owner -> {
 			
 			return contributorPanelRepository.findById(panelId).map(panel -> {
+				
 				if (!blogRepository.existsByUserAndContributionPanel(owner, panel))
 					throw new IllegalAccessRequestException("Access denied");
 				return userRrepository.findById(userId).map(contributor -> {
 					
+					System.err.println("+++++++++++++++++");
+					System.out.println(panel.getContributors().contains(contributor));
 					if(!panel.getContributors().contains(contributor))
 					{
 						panel.getContributors().add(contributor);
+						contributor.getContributionPanels().add(panel);
+						userRrepository.save(contributor);
 						return ResponseEntity.ok(responseStructure.setStatusCode(HttpStatus.OK.value())
 													.setMessgae("Contributor added")
-								.setData(mapToContributorPanelResponseEntity(panel, contributor.getUsername())));
+								.setData(mapToContributorPanelResponseEntity(contributorPanelRepository.save(panel), contributor.getUsername())));
 					}
 					return ResponseEntity.ok(responseStructure
 							.setStatusCode(HttpStatus.OK.value())

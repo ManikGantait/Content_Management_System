@@ -26,7 +26,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@EntityListeners(AuditingEntityListener.class)
+//@EntityListeners(AuditingEntityListener.class)
 public class BlogPost {
 	
 	@Id
@@ -42,14 +42,14 @@ public class BlogPost {
 	@ManyToOne
 	private Blog blog;
 	
-	@CreatedBy
+//	@CreatedBy
 	private String createdBy;
 	@CreatedDate
 	@Column(updatable = false)
 	private LocalDateTime createAt;
 	@LastModifiedDate
 	private LocalDateTime lastModifiedAt;
-	@LastModifiedBy
+//	@LastModifiedBy
 	private String lastModifiedBy;
 	
 	@OneToOne
