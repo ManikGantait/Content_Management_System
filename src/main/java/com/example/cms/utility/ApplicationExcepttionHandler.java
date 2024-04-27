@@ -17,6 +17,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.example.cms.exception.BlogAlreadyExistByTitle;
+import com.example.cms.exception.BlogNotFoundByIdException;
+import com.example.cms.exception.BlogPostNotFoundByIdException;
+import com.example.cms.exception.BlogPostNotPublishException;
+import com.example.cms.exception.ContributorPanelNotFoundByIdException;
+import com.example.cms.exception.IllegalAccessRequestException;
+import com.example.cms.exception.ScheduleTimeNotValidException;
+import com.example.cms.exception.TopicNotSpecifiedException;
 import com.example.cms.exception.UserAlreadyExistByEmailException;
 import com.example.cms.exception.UserNotFoundByIdException;
 
@@ -77,6 +85,51 @@ public class ApplicationExcepttionHandler extends ResponseEntityExceptionHandler
 		return errorStructure(HttpStatus.BAD_REQUEST, ex.getMessage(), "User Id Not Found");
 	}
 
+	@ExceptionHandler
+	public ResponseEntity<ErrorStructure<String>> handleBlogAlreadyExistByTitle(BlogAlreadyExistByTitle ex)
+	{
+		return errorStructure(HttpStatus.BAD_REQUEST, ex.getMessage(), "Title already exixt");
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ErrorStructure<String>> handleBlogTopicNotSpecified(TopicNotSpecifiedException ex)
+	{
+		return errorStructure(HttpStatus.BAD_REQUEST, ex.getMessage(), "Title not Specified");
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ErrorStructure<String>> handleBlogNotFoundById(BlogNotFoundByIdException ex)
+	{
+		return errorStructure(HttpStatus.BAD_REQUEST, ex.getMessage(), "Blog Not FOund By Id");
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ErrorStructure<String>> handleIllegalAccessRequest(IllegalAccessRequestException ex)
+	{
+		return errorStructure(HttpStatus.BAD_REQUEST, ex.getMessage(), "IllegalAccessRequest");
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ErrorStructure<String>> handleBlogPostNotFoundById(BlogPostNotFoundByIdException ex)
+	{
+		return errorStructure(HttpStatus.BAD_REQUEST, ex.getMessage(), "Blog Post Not Found by Id");
+	}
+	@ExceptionHandler
+	public ResponseEntity<ErrorStructure<String>> handleBlogPostNotPublish(BlogPostNotPublishException ex)
+	{
+		return errorStructure(HttpStatus.BAD_REQUEST, ex.getMessage(), "Blog Post Not Publish");
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ErrorStructure<String>> handleContributiorPanelNotFound(ContributorPanelNotFoundByIdException ex)
+	{
+		return errorStructure(HttpStatus.BAD_REQUEST, ex.getMessage(), "contributor not Found By id");
+	}
+	@ExceptionHandler
+	public ResponseEntity<ErrorStructure<String>> handleScheduleTimeNotValid(ScheduleTimeNotValidException ex)
+	{
+		return errorStructure(HttpStatus.BAD_REQUEST, ex.getMessage(), "ScheduleTimeNotValid");
+	}
 	
 
 	

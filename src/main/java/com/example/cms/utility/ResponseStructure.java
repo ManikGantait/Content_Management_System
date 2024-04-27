@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 public class ResponseStructure<T> {
 	
 	private int statusCode;
-	private String messgae;
+	private String message;
 	private T data;
 	
 	public int getStatusCode() {
@@ -17,10 +17,10 @@ public class ResponseStructure<T> {
 		return this;
 	}
 	public String getMessgae() {
-		return messgae;
+		return message;
 	}
 	public ResponseStructure<T> setMessgae(String messgae) {
-		this.messgae = messgae;
+		this.message = messgae;
 		return this;
 	}
 	public T getData() {

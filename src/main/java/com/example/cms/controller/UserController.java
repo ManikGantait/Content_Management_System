@@ -54,6 +54,11 @@ public class UserController {
 	{
 		return service.softDeleteUser(userId);
 	}
+	@GetMapping("/users/{userId}")
+	public ResponseEntity<ResponseStructure<UserResponseEntity>> findUniqueUser(@PathVariable int userId) {
+		return service.findUniqueUser(userId);
+	}
+	
 	
 	
 	
