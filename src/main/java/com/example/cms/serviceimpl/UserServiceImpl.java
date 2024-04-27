@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService
 		user.setUsername(userRequest.getUsername());
 		user.setEmail(userRequest.getEmail());
 		user.setPassword(encode);
+		user.setDeleted(false);
 		return user;
 	}	
 
@@ -56,6 +57,19 @@ public class UserServiceImpl implements UserService
 				.setMessgae("Registered Successfully")
 				.setData(mapToUserResponse(save)));		
 	}
+	
+	
+	@Override
+	public ResponseEntity<ResponseStructure<UserResponseEntity>> softDeleteUser(int userId) {
+		return repository.findById(userId).map(user->{
+				user.setDeleted(true);
+				return ResponseEntity.ok(structure.setStatusCode(HttpStatus.OK.value())
+													.setMessgae("Deleted Successfully")
+													.setData(mapToUserResponse(repository.save(user))));
+		}).orElseThrow(()->new UserNotFoundByIdException("User is not found By Id"));
+	}
+	
+	
 	@Override
 	public ResponseEntity<ResponseStructure<UserResponseEntity>> findUniqueUser(int userId) {
 		

@@ -56,7 +56,7 @@ public class SecurityConfig {
 		 * 
 		 */
 		return http.csrf(csrf->csrf.disable())
-				.authorizeHttpRequests(auth->auth.requestMatchers("/users/register")
+				.authorizeHttpRequests(auth->auth.requestMatchers("/users/register")									
 												.permitAll() //to be public
 												.anyRequest() //any without this url should be authenticated
 												.authenticated())

@@ -48,11 +48,15 @@ public class UserController {
 		return "Hello From CMS";
 	}
 
+	@DeleteMapping("/users/{userId}")
+	private ResponseEntity<ResponseStructure<UserResponseEntity>> softDeleteUser(@PathVariable int userId)
+	{
+		return service.softDeleteUser(userId);
+	}
 	@GetMapping("/users/{userId}")
 	public ResponseEntity<ResponseStructure<UserResponseEntity>> findUniqueUser(@PathVariable int userId) {
 		return service.findUniqueUser(userId);
 	}
-	
 	
 	
 	
