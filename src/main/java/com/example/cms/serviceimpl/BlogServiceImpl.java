@@ -5,12 +5,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.cms.entity.Blog;
+import com.example.cms.entity.ContributionPanel;
 import com.example.cms.entity.User;
 import com.example.cms.exception.BlogAlreadyExistByTitle;
 import com.example.cms.exception.BlogNotFoundByIdException;
 import com.example.cms.exception.TopicNotSpecifiedException;
 import com.example.cms.exception.UserNotFoundByIdException;
 import com.example.cms.repository.BlogRepository;
+import com.example.cms.repository.ContributorPanelRepository;
 import com.example.cms.repository.UserRepository;
 import com.example.cms.requestdto.BlogRequestEntity;
 import com.example.cms.responsedto.BlogResponseEntity;
@@ -24,6 +26,7 @@ import lombok.AllArgsConstructor;
 public class BlogServiceImpl implements BlogService {
 	private UserRepository userRepository;
 	private BlogRepository blogRepository;
+	private ContributorPanelRepository contributorsRepository;
 	private ResponseStructure<BlogResponseEntity> responseStructure;
 	private ResponseStructure<Boolean> responseStructure2;
 
@@ -35,8 +38,12 @@ public class BlogServiceImpl implements BlogService {
 	}
 
 	private BlogResponseEntity mapToBlogResponseEntity(Blog blog) {
-		return BlogResponseEntity.builder().blogId(blog.getBlogId()).title(blog.getTitle()).about(blog.getAbout())
-				.topics(blog.getTopics()).build();
+		return BlogResponseEntity.builder().blogId(blog.getBlogId())
+				.title(blog.getTitle())
+				.about(blog.getAbout())
+				.topics(blog.getTopics())
+				.adminId(blog.getUser().getUserId())
+				.build();
 
 	}
 
@@ -44,17 +51,20 @@ public class BlogServiceImpl implements BlogService {
 	public ResponseEntity<ResponseStructure<BlogResponseEntity>> createBlog(int userId,
 			BlogRequestEntity blogRequestEntity) {
 
-		if (blogRepository.existsByTitle(blogRequestEntity.getTitle()))
-			throw new BlogAlreadyExistByTitle("Blog already exist with same title");
-
 		Blog saveBlog = userRepository.findById(userId).map(user -> {
-
+			
+			if (blogRepository.existsByTitle(blogRequestEntity.getTitle()))
+				throw new BlogAlreadyExistByTitle("Blog already exist with same title");
+			
 			if (blogRequestEntity.getTopics().length < 1)
 				throw new TopicNotSpecifiedException("faild to create Blog");
 
 			Blog blog = mapToBlog(new Blog(), blogRequestEntity);
-			blog.getUsers().add(user);
-			return blogRepository.save(blog);
+			
+				blog.setUser(user);
+				blog.setContributionPanel(contributorsRepository.save(new ContributionPanel()));
+			 return blogRepository.save(blog);
+						
 
 		}).orElseThrow(() -> new UserNotFoundByIdException("User With Specified Id not Found"));
 

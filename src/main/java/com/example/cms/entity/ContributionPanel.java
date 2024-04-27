@@ -1,34 +1,29 @@
 package com.example.cms.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter
 @Setter
-public class Blog {
+@Getter
+public class ContributionPanel {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int blogId;
-	@Column(unique = true)
-	private String title;
-	private String[] topics;
-	private String about;
+	private int panelId;
 	
-	@ManyToOne
-	private User user;
 	
-	@OneToOne
-	private ContributionPanel contributionPanel;
+	@ManyToMany
+	private List<User> contributors=new ArrayList<>();
 	
 	
 
